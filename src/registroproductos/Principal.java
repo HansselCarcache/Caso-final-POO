@@ -5,10 +5,12 @@
  */
 package registroproductos;
 
+import Dao.TblEmpleados;
 import Dao.TblProductos;
 import formularios.FrmLogin;
 import java.util.List;
 import java.util.ArrayList;
+import modelos.Empleado;
 import modelos.Productos;
 
 /**
@@ -23,9 +25,11 @@ public class Principal {
     public static void main(String[] args) {
         // TODO code application logic here
         List<Productos> productos = new ArrayList();
+        List<Empleado> empleados = new ArrayList();
         TblProductos tblproductos = new TblProductos(productos);
+        TblEmpleados tblempleados = new TblEmpleados(empleados);
         
-        FrmLogin frm = new FrmLogin();
+        FrmLogin frm = new FrmLogin(empleados);
         frm.setVisible(true);
     }
     

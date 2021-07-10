@@ -39,17 +39,18 @@ public class FrmMenu extends javax.swing.JFrame {
     }
     
     private void mostrarTabla(){
-        String[] titulos = {"Id","Codigo","Nombre","Descripcion","Precio","Estado"};
+        String[] titulos = {"Id","Codigo","Nombre","Descripcion","Precio","Estado","Id bodega"};
         tbl.setColumnIdentifiers(titulos);
         this.tblProductos.setModel(tbl);
         for (Productos producto: productos){
-            Object[] datos = new Object[6];
+            Object[] datos = new Object[7];
             datos[0] = producto.getId();
             datos[1] = producto.getCodigo();
             datos[2] = producto.getNombre();
             datos[3] = producto.getDescripcion();
             datos[4] = producto.getPrecio();
             datos[5] = producto.getEstado();
+            datos[6] = producto.getIdBodega();
             tbl.addRow(datos);
             
         }
@@ -161,7 +162,7 @@ public class FrmMenu extends javax.swing.JFrame {
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         // TODO add your handling code here:
-        FrmModificar modificar = new FrmModificar(productos);
+        FrmModificar modificar = new FrmModificar();
         
         modificar.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed

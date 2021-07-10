@@ -18,18 +18,22 @@ public class Productos {
     private String descripcion;
     private int precio;
     private int estado;
+    private int idBodega;
 
     public Productos() {
     }
 
-    public Productos(int id, int codigo, String nombre, String descripcion, int precio, int estado) {
+    public Productos(int id, int codigo, String nombre, String descripcion, int precio, int estado, int idBodega) {
         this.id = id;
         this.codigo = codigo;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.estado = estado;
+        this.idBodega = idBodega;
     }
+
+   
 
     public int getId() {
         return id;
@@ -81,8 +85,10 @@ public class Productos {
 
     @Override
     public String toString() {
-        return "Productos{" + "id=" + id + ", codigo=" + codigo + ", nombre=" + nombre + ", descripcion=" + descripcion + ", precio=" + precio + ", estado=" + estado + '}';
+        return "Productos{" + "id=" + id + ", codigo=" + codigo + ", nombre=" + nombre + ", descripcion=" + descripcion + ", precio=" + precio + ", estado=" + estado + ", idBodega=" + idBodega + '}';
     }
+
+   
 
     @Override
     public int hashCode() {
@@ -127,6 +133,14 @@ public class Productos {
             return false;
         }
         return true;
+    }
+
+    public int getIdBodega() {
+        return idBodega;
+    }
+
+    public void setIdBodega(int idBodega) {
+        this.idBodega = idBodega;
     }
     
     

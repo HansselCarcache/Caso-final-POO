@@ -5,51 +5,48 @@
  */
 package Dao;
 
-import java.util.List;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
-import modelos.Productos;
+import modelos.Empleado;
 
 /**
  *
  * @author hanss
  */
-public class TblProductos {
+public class TblEmpleados {
     private Conexion conex;
     private Connection conn;
-    private PreparedStatement mostrarProductos;
-    private List<Productos> productos = new ArrayList();
+    private PreparedStatement mostrarEmpleados;
+    private List<Empleado> empleados = new ArrayList();
     
-    public TblProductos(List<Productos> lista){
+    public TblEmpleados(List<Empleado> lista){
         this.conex = new Conexion();
-        this.productos = lista;
+        this.empleados = lista;
         conn = conex.obtenerConexion();
         try{
-            mostrarProductos = conn.prepareStatement("Select * from Productos");
+            mostrarEmpleados = conn.prepareStatement("Select * from Empleado");
         }
          catch(SQLException ex){
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", 0);
         }
-        listarRegistro();
+        listarEmpleado();
     }
     
-    public void listarRegistro(){
-        ResultSet rs = null;
-        try{
-            rs = mostrarProductos.executeQuery();
-            productos.clear();
+   public void listarEmpleado(){
+       ResultSet rs = null;
+       try{
+            rs = mostrarEmpleados.executeQuery();
+            empleados.clear();
             while(rs.next()){
-                productos.add(new Productos(rs.getInt("Id"),
-                        rs.getInt("Codigo"),rs.getString("Nombre"),rs.getString("Descripcion"),rs.getInt("Precio"),
-                rs.getInt("Estado"), rs.getInt("idBodega")));
+                empleados.add(new Empleado(rs.getInt("Id"),rs.getString("codigoemp"),rs.getString("clave"),rs.getString("puesto")));
             }
-        }catch (Exception ex){
+       }catch (Exception ex){
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
-        
-    }
+   }
 }

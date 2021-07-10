@@ -6,10 +6,9 @@
 package formularios;
 
 import Dao.Conexion;
-import Dao.TblProductos;
+import Dao.TblEmpleados;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,34 +16,23 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import modelos.Empleado;
-import modelos.Productos;
 
 /**
  *
  * @author hanss
  */
-public class FrmLogin extends javax.swing.JFrame {
+public class FrmAgregaremp extends javax.swing.JFrame {
     Conexion conex = new Conexion();
     Connection conn = conex.obtenerConexion();
-    List<Productos> productos = new ArrayList();
     List<Empleado> empleados = new ArrayList();
-    TblProductos tblproductos = new TblProductos(productos);
-    List<String> errores = new ArrayList();
+    TblEmpleados tblempleados = new TblEmpleados(empleados);
     /**
-     * Creates new form FrmLogin
+     * Creates new form FrmAgregaremp
      */
-    public FrmLogin() {
+    public FrmAgregaremp() {
         initComponents();
         this.setLocationRelativeTo(null);
     }
-    
-    public FrmLogin(List<Empleado> lista) {
-        initComponents();
-        empleados = lista;
-        
-        this.setLocationRelativeTo(null);
-    }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -60,11 +48,10 @@ public class FrmLogin extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         txtId = new javax.swing.JTextField();
         cbxPuesto = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         txtPass = new javax.swing.JTextField();
+        btnRegresar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -74,13 +61,6 @@ public class FrmLogin extends javax.swing.JFrame {
 
         cbxPuesto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Limpieza", "Gerente" }));
 
-        jButton1.setText("Ingresar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
         jButton2.setText("Agregar");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -88,23 +68,27 @@ public class FrmLogin extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setText("Eliminar");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        jLabel3.setText("Contraseña:");
+
+        btnRegresar.setText("Regresar");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                btnRegresarActionPerformed(evt);
             }
         });
-
-        jLabel3.setText("Contraseña:");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(60, 60, 60)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(60, 60, 60)
+                        .addComponent(btnRegresar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton2))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
@@ -113,15 +97,8 @@ public class FrmLogin extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(cbxPuesto, 0, 136, Short.MAX_VALUE)
                             .addComponent(txtId)
-                            .addComponent(txtPass)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(81, 81, 81)
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton3)))
-                .addContainerGap(99, Short.MAX_VALUE))
+                            .addComponent(txtPass))))
+                .addContainerGap(100, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -138,12 +115,11 @@ public class FrmLogin extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(cbxPuesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
                     .addComponent(jButton2)
-                    .addComponent(jButton3))
-                .addContainerGap(87, Short.MAX_VALUE))
+                    .addComponent(btnRegresar))
+                .addContainerGap(97, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -168,54 +144,26 @@ public class FrmLogin extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        FrmAgregaremp frm = new FrmAgregaremp();
-        this.setVisible(false);
-        frm.setVisible(true);
+        try{
+            PreparedStatement ingresar = conn.prepareStatement("Insert into Empleado(codigoemp,clave,puesto) values(?,?,?)");
+            ingresar.setString(1, txtId.getText());
+            ingresar.setString(2, txtPass.getText());
+            ingresar.setString(3, cbxPuesto.getSelectedItem().toString());
+            ingresar.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Se ha registrado el empleado correctamente");
+            tblempleados.listarEmpleado();
+        }catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al ingresar el producto");
+            Logger.getLogger(FrmIngresar.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
         // TODO add your handling code here:
-        try{
-            PreparedStatement pst = conn.prepareStatement("Select * from Empleado");
-            ResultSet rs = pst.executeQuery();
-            
-            for(Empleado empleado: empleados){
-                if(empleado.getCodigo().equals(txtId.getText()) && empleado.getPwd().equals(txtPass.getText()) && empleado.getPuestoEmpresa().equals(cbxPuesto.getSelectedItem().toString())){
-                    System.out.println(empleado.toString());
-                   JOptionPane.showMessageDialog(rootPane, "Empleado autenticado con exito","Acceso Autorizado", JOptionPane.INFORMATION_MESSAGE);
-                     FrmMenu ingresar = new FrmMenu(productos);
-                    this.setVisible(false);
-                    ingresar.setVisible(true);
-                    break;
-                }else if(empleado.getCodigo() !=(txtId.getText()) && empleado.getPwd() !=(txtPass.getText()) && empleado.getPuestoEmpresa() !=(cbxPuesto.getSelectedItem().toString())){
-                       
-                       String error = "Error";
-                       errores.add(error);
-                       if(errores.size() == empleados.size()){
-                           JOptionPane.showMessageDialog(rootPane, "Intente nuevamente, no existe registro de este empleado en la base de datos","Acceso Denegado", JOptionPane.ERROR_MESSAGE);
-                       }
-                       
-                     
-                }
-                    
-            }
-            
-           
-        }catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Error");
-            Logger.getLogger(FrmModificar.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        
-        
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-        FrmEliminaremp frm = new FrmEliminaremp();
+        FrmLogin frm = new FrmLogin(empleados);
         this.setVisible(false);
         frm.setVisible(true);
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_btnRegresarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -234,29 +182,28 @@ public class FrmLogin extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmAgregaremp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmAgregaremp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmAgregaremp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmAgregaremp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmLogin().setVisible(true);
+                new FrmAgregaremp().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnRegresar;
     private javax.swing.JComboBox<String> cbxPuesto;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

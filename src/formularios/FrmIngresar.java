@@ -52,6 +52,8 @@ public class FrmIngresar extends javax.swing.JFrame {
         txtNombre = new javax.swing.JTextField();
         txtDescripcion = new javax.swing.JTextField();
         txtPrecio = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        cbxBodega = new javax.swing.JComboBox<>();
         btnIngresar = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
@@ -65,6 +67,10 @@ public class FrmIngresar extends javax.swing.JFrame {
 
         jLabel5.setText("Precio:");
 
+        jLabel1.setText("Bodega:");
+
+        cbxBodega.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bodega Principal", "Bodega Secundaria" }));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -72,6 +78,7 @@ public class FrmIngresar extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1)
                     .addComponent(jLabel5)
                     .addComponent(jLabel4)
                     .addComponent(jLabel3)
@@ -83,7 +90,8 @@ public class FrmIngresar extends javax.swing.JFrame {
                     .addComponent(txtDescripcion)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(cbxBodega, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(44, 44, 44))
         );
         jPanel1Layout.setVerticalGroup(
@@ -105,7 +113,10 @@ public class FrmIngresar extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(cbxBodega, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         btnIngresar.setText("Ingresar");
@@ -142,11 +153,11 @@ public class FrmIngresar extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnIngresar)
                     .addComponent(jButton2))
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
 
         pack();
@@ -162,14 +173,30 @@ public class FrmIngresar extends javax.swing.JFrame {
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
         try {
             // TODO add your handling code here:
-            PreparedStatement ingresar = conn.prepareStatement("Insert into Productos(Codigo,Nombre,Descripcion,Precio,Estado)Values(?,?,?,?,?)");
+            if(this.cbxBodega.getSelectedIndex() == 0){
+                PreparedStatement ingresar = conn.prepareStatement("Insert into Productos(Codigo,Nombre,Descripcion,Precio,Estado,idBodega)Values(?,?,?,?,?,?)");
             ingresar.setInt(1, Integer.parseInt(txtCodigo.getText()));
             ingresar.setString(2, txtNombre.getText());
             ingresar.setString(3, txtDescripcion.getText());
             ingresar.setInt(4, Integer.parseInt(txtPrecio.getText()));
             ingresar.setInt(5, 1);
+            ingresar.setInt(6, 1);
             ingresar.executeUpdate();
             JOptionPane.showMessageDialog(null, "Se ha registrado el producto correctamente");
+            tblproductos.listarRegistro(); 
+            }else{
+               PreparedStatement ingresar = conn.prepareStatement("Insert into Productos(Codigo,Nombre,Descripcion,Precio,Estado,idBodega)Values(?,?,?,?,?,?)");
+            ingresar.setInt(1, Integer.parseInt(txtCodigo.getText()));
+            ingresar.setString(2, txtNombre.getText());
+            ingresar.setString(3, txtDescripcion.getText());
+            ingresar.setInt(4, Integer.parseInt(txtPrecio.getText()));
+            ingresar.setInt(5, 1);
+            ingresar.setInt(6, 2);
+            ingresar.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Se ha registrado el producto correctamente");
+            tblproductos.listarRegistro(); 
+            }
+            
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al ingresar el producto");
             Logger.getLogger(FrmIngresar.class.getName()).log(Level.SEVERE, null, ex);
@@ -213,7 +240,9 @@ public class FrmIngresar extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnIngresar;
+    private javax.swing.JComboBox<String> cbxBodega;
     private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

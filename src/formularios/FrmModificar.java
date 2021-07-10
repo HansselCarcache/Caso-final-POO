@@ -6,6 +6,7 @@
 package formularios;
 
 import Dao.Conexion;
+import Dao.TblProductos;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -26,6 +27,7 @@ public class FrmModificar extends javax.swing.JFrame {
     Connection conn = conex.obtenerConexion();
     List<Productos> productos = new ArrayList();
     DefaultTableModel tbl = new DefaultTableModel();
+    TblProductos tblproductos = new TblProductos(productos);
     
     /**
      * Creates new form FrmModificar
@@ -44,17 +46,18 @@ public class FrmModificar extends javax.swing.JFrame {
     }
     
     private void mostrarTabla(){
-        String[] titulos = {"Id","Codigo","Nombre","Descripcion","Precio","Estado"};
+        String[] titulos = {"Id","Codigo","Nombre","Descripcion","Precio","Estado","Id de la bodega"};
         tbl.setColumnIdentifiers(titulos);
         this.tblRegistros.setModel(tbl);
         for (Productos producto: productos){
-            Object[] datos = new Object[6];
+            Object[] datos = new Object[7];
             datos[0] = producto.getId();
             datos[1] = producto.getCodigo();
             datos[2] = producto.getNombre();
             datos[3] = producto.getDescripcion();
             datos[4] = producto.getPrecio();
             datos[5] = producto.getEstado();
+            datos[6] = producto.getIdBodega();
             tbl.addRow(datos);
             
         }
@@ -80,6 +83,8 @@ public class FrmModificar extends javax.swing.JFrame {
         txtNombre = new javax.swing.JTextField();
         txtDescripcion = new javax.swing.JTextField();
         txtPrecio = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        cbxBodega = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
@@ -104,28 +109,39 @@ public class FrmModificar extends javax.swing.JFrame {
 
         txtNombre.setEditable(false);
 
+        jLabel6.setText("Bodega:");
+
+        cbxBodega.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2" }));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel1))
-                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtPrecio)
-                    .addComponent(txtNombre)
-                    .addComponent(txtDescripcion)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1))
+                        .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(txtPrecio)
+                            .addComponent(txtNombre)
+                            .addComponent(txtDescripcion)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cbxBodega, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -151,7 +167,11 @@ public class FrmModificar extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(cbxBodega, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jButton1.setText("Modificar");
@@ -252,26 +272,36 @@ public class FrmModificar extends javax.swing.JFrame {
         String nombre = String.valueOf(tbl.getValueAt(tblRegistros.getSelectedRow(), 2));
         String descripcion = String.valueOf(tbl.getValueAt(tblRegistros.getSelectedRow(), 3));
         int precio = Integer.parseInt(String.valueOf(tbl.getValueAt(tblRegistros.getSelectedRow(), 4)));
+        int bodega = Integer.parseInt(String.valueOf(tbl.getValueAt(tblRegistros.getSelectedRow(), 6)));
         this.txtId.setText(String.valueOf(id));
         this.txtCodigo.setText(String.valueOf(codigo));
         this.txtNombre.setText(nombre);
         this.txtDescripcion.setText(descripcion);
         this.txtPrecio.setText(String.valueOf(precio));
+        this.cbxBodega.getModel().setSelectedItem(String.valueOf(bodega));
         
     }//GEN-LAST:event_tblRegistrosMouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
             // TODO add your handling code here:
-            PreparedStatement modificar = conn.prepareStatement("Update Productos Set Descripcion='"+txtDescripcion.getText()+"',Precio='"+txtPrecio.getText()+"' WHERE Id='"+txtId.getText()+"'");
+            if(this.txtId.getText().equals("")){
+                 JOptionPane.showMessageDialog(null, "Elija el producto que desea modificar primeramente");
+            }else{
+              PreparedStatement modificar = conn.prepareStatement("Update Productos Set Descripcion='"+txtDescripcion.getText()+"',Precio='"+txtPrecio.getText()+"' WHERE Id='"+txtId.getText()+"'");
             modificar.executeUpdate();
+            tbl.setNumRows(0);
+            tblproductos.listarRegistro();
             mostrarTabla();
             JOptionPane.showMessageDialog(null, "Se ha actualizado el producto correctamente");
+              
+            }
             
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error");
             Logger.getLogger(FrmModificar.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -310,6 +340,7 @@ public class FrmModificar extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> cbxBodega;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
@@ -317,6 +348,7 @@ public class FrmModificar extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
