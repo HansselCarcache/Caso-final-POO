@@ -45,17 +45,18 @@ public class FrmEliminar extends javax.swing.JFrame {
     }
      
      private void mostrarTabla(){
-        String[] titulos = {"Id","Codigo","Nombre","Descripcion","Precio","Estado"};
+        String[] titulos = {"Id","Codigo","Nombre","Descripcion","Precio","Estado","idBodega"};
         tbl.setColumnIdentifiers(titulos);
         this.tblEstado.setModel(tbl);
         for (Productos producto: productos){
-            Object[] datos = new Object[6];
+            Object[] datos = new Object[7];
             datos[0] = producto.getId();
             datos[1] = producto.getCodigo();
             datos[2] = producto.getNombre();
             datos[3] = producto.getDescripcion();
             datos[4] = producto.getPrecio();
             datos[5] = producto.getEstado();
+            datos[6] = producto.getIdBodega();
             tbl.addRow(datos);
             
         }
@@ -80,6 +81,8 @@ public class FrmEliminar extends javax.swing.JFrame {
         txtCodigo = new javax.swing.JTextField();
         txtNombre = new javax.swing.JTextField();
         cbxEstado = new javax.swing.JComboBox<>();
+        jLabel5 = new javax.swing.JLabel();
+        cbxBodega = new javax.swing.JComboBox<>();
         btnEliminar = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
@@ -94,7 +97,7 @@ public class FrmEliminar extends javax.swing.JFrame {
 
         jLabel3.setText("Nombre:");
 
-        jLabel4.setText("Estado");
+        jLabel4.setText("Estado:");
 
         txtId.setEditable(false);
 
@@ -104,6 +107,10 @@ public class FrmEliminar extends javax.swing.JFrame {
 
         cbxEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0", "1" }));
 
+        jLabel5.setText("Bodega:");
+
+        cbxBodega.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2" }));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -111,6 +118,7 @@ public class FrmEliminar extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel5)
                     .addComponent(jLabel4)
                     .addComponent(jLabel3)
                     .addComponent(jLabel2)
@@ -123,7 +131,8 @@ public class FrmEliminar extends javax.swing.JFrame {
                             .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(cbxEstado, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(cbxEstado, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cbxBodega, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(20, 20, 20))
         );
         jPanel1Layout.setVerticalGroup(
@@ -145,7 +154,11 @@ public class FrmEliminar extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(cbxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(58, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(cbxBodega, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         btnEliminar.setText("Eliminar");
@@ -245,23 +258,29 @@ public class FrmEliminar extends javax.swing.JFrame {
         String nombre = String.valueOf(tbl.getValueAt(tblEstado.getSelectedRow(), 2));
         String descripcion = String.valueOf(tbl.getValueAt(tblEstado.getSelectedRow(), 3));
         int estado = Integer.parseInt(String.valueOf(tbl.getValueAt(tblEstado.getSelectedRow(), 5)));
+        int bodega = Integer.parseInt(String.valueOf(tbl.getValueAt(tblEstado.getSelectedRow(), 6)));
         this.txtId.setText(String.valueOf(id));
         this.txtCodigo.setText(String.valueOf(codigo));
         this.txtNombre.setText(nombre);
         this.cbxEstado.getModel().setSelectedItem(String.valueOf(estado));
+        this.cbxBodega.getModel().setSelectedItem(String.valueOf(bodega));
     }//GEN-LAST:event_tblEstadoMouseClicked
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         // TODO add your handling code here:
         try {
             // TODO add your handling code here:
-            PreparedStatement modificar = conn.prepareStatement("Update Productos Set Estado=0 WHERE Id='"+txtId.getText()+"'");
+            if(this.txtId.getText().equals("")){
+                JOptionPane.showMessageDialog(null, "Elija el producto que desea eliminar primeramente");
+            }else{
+               PreparedStatement modificar = conn.prepareStatement("Update Productos Set Estado=0 WHERE Id='"+txtId.getText()+"'");
             modificar.executeUpdate();
             tbl.setNumRows(0);
             refresco.listarRegistro();
             mostrarTabla();
-            JOptionPane.showMessageDialog(null, "Se ha eliminado el producto correctamente");
-            
+            JOptionPane.showMessageDialog(null, "Se ha eliminado el producto correctamente"); 
+            }
+       
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error");
             Logger.getLogger(FrmModificar.class.getName()).log(Level.SEVERE, null, ex);
@@ -305,12 +324,14 @@ public class FrmEliminar extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEliminar;
+    private javax.swing.JComboBox<String> cbxBodega;
     private javax.swing.JComboBox<String> cbxEstado;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
